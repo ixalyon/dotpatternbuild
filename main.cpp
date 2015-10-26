@@ -2,6 +2,7 @@
 #include <QApplication>
 
 #include <iostream>
+#include <string>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -49,6 +50,7 @@ int main( )
 
 void showImage()
 {
+
     DotPatternBuilder dbp;
     Mat pattern;
     Mat lineBlank(BLANK_HEIGHT ,LINE_WIDTH,CV_32F,Scalar(1));
@@ -65,7 +67,8 @@ void showImage()
         vconcat(image,lineBlank,image);
     }
     imshow( "Display window", image );
-    imwrite("pattern.pbm",image*255);
+//    string s="pattern"<<Scale_X<<"X"<<Scale_Y<<".png";
+//    imwrite(s,image*255);
 
 //   return image;
 }
