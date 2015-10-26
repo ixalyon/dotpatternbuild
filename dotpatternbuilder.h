@@ -11,7 +11,7 @@ public:
     ConstInt Height_Unit=5;
     ConstInt Height_Unit_Line=3;
     ConstInt Number_Base=6;
-    ConstInt Digits=4;
+    ConstInt Digits=3;
     ConstInt Dim_X = 3;
     ConstInt Dim_Y = 3;
     ConstInt Blnk_Ln_Dim_X = 1;

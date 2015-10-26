@@ -11,9 +11,9 @@ using namespace std;
 using namespace cv;
 
 typedef const int ConstInt;
-ConstInt LINE_WIDTH(1000);
-ConstInt LINE_HEIGHT( 5);
-ConstInt RULE_NUMBER (5);
+ConstInt LINE_WIDTH(500);
+ConstInt LINE_HEIGHT( 2);
+ConstInt RULE_NUMBER (10);
 ConstInt BLANK_HEIGHT (20);
 
 void showImage();
@@ -65,6 +65,7 @@ void showImage()
         vconcat(image,lineBlank,image);
     }
     imshow( "Display window", image );
+    imwrite("pattern.pbm",image*255);
 
 //   return image;
 }

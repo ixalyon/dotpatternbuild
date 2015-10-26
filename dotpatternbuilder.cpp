@@ -26,7 +26,7 @@ DotPatternBuilder::DotPatternBuilder()
      Mat patternTemplate(height,lineWidth,CV_32F,1);
 
      if(flag){
-         randn(patternTemplate,0,1);
+//         randn(patternTemplate,0,1);
          pattern=patternTemplate;
          flag=false;
      }
@@ -34,9 +34,19 @@ DotPatternBuilder::DotPatternBuilder()
      patternTemplate=pattern.clone();
 
 
-     for (int i = 0; i < lineWidth/width; ++i) {
+     for (int i = 0; i <= lineWidth/width; ++i) {
          pos->y=i;
          tmp= Pattern(pos);
+         if(i==lineWidth/width){
+
+             Mat roi(patternTemplate,Rect(width*i,0,lineWidth-width*i,height));
+             Mat tmps(tmp,Rect(0,0,lineWidth-width*i,height));
+             tmps.copyTo(roi);
+             continue;
+         }
+         Mat roi(patternTemplate,Rect(width*i,0,width,height));
+        std::cout<<lineWidth-width*i<<" "<<height<<std::endl;
+         tmp.copyTo(roi);
 
      }
 
@@ -71,12 +81,16 @@ Mat DotPatternBuilder::Pattern(cv::Point* pos)
     }
 
     Mat Line(Blnk_Ln_Dim_Y,verLine.size().width,CV_32F,Scalar::all(0));
+//    resize(Line,Line,Size(),Scale_X,Blnk_Ln_Dim_Y,INTER_NEAREST);
+//    resize(verLine,verLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
+//    resize(horLine,horLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
+
 
     vconcat(verLine,Line,tempLine);
     vconcat(tempLine,horLine,tempLine);
-
-    namedWindow("test");
     resize(tempLine,tempLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
+    namedWindow("test");
+
 
 //    std::cout<<tmp.row(0)<<std::endl;
 //    std::cout<<tmp.row(1)<<std::endl;
