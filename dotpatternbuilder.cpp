@@ -18,20 +18,29 @@ DotPatternBuilder::DotPatternBuilder()
 
  Mat DotPatternBuilder::builder(const int lineHeight,const int lineWidth, Point* pos)
  {
+     Mat tmp;
+     int width=(Digits*(Dim_X+Blnk_Ln_Dim_X)+Blnk_Ln_Dim_X)*Scale_X;
+     int height=(Dim_Y*2+Blnk_Ln_Dim_Y)*Scale_Y;
     //Add random noise and keep value constant throughout the runtime
-    Mat patternTemplate(lineHeight*5,lineWidth,CV_32F,1);;
-    if(flag){
-        randn(patternTemplate,0,1);
-        pattern=patternTemplate;
-        flag=false;
-    }
-    //Taking copy of the original template
-    patternTemplate=pattern.clone();
 
-    int width=(Digits*(Dim_X+Blank_Line_Dim)+Blank_Line_Dim)*Scale_X;
-    std::cout<<"width :"<<width<<std::endl;
-    Mat tmp= Pattern(pos);
-    return patternTemplate;
+     Mat patternTemplate(height,lineWidth,CV_32F,1);
+
+     if(flag){
+         randn(patternTemplate,0,1);
+         pattern=patternTemplate;
+         flag=false;
+     }
+     //Taking copy of the original template
+     patternTemplate=pattern.clone();
+
+
+     for (int i = 0; i < lineWidth/width; ++i) {
+         pos->y=i;
+         tmp= Pattern(pos);
+
+     }
+
+     return patternTemplate;
 }
 
 Mat DotPatternBuilder::Pattern(cv::Point* pos)
@@ -42,7 +51,7 @@ Mat DotPatternBuilder::Pattern(cv::Point* pos)
 
     Mat tempLine, horLine,verLine;
 
-    Mat breakLine(Dim_Y,Blank_Line_Dim,CV_32F,Scalar::all(0));
+    Mat breakLine(Dim_Y,Blnk_Ln_Dim_X,CV_32F,Scalar::all(0));
 
 
     verLine=breakLine.clone();
@@ -61,14 +70,13 @@ Mat DotPatternBuilder::Pattern(cv::Point* pos)
         horizontalPos%=(int)std::pow(Number_Base,i);
     }
 
-    Mat Line(Blank_Line_Dim*2,verLine.size().width,CV_32F,Scalar::all(0));
+    Mat Line(Blnk_Ln_Dim_Y,verLine.size().width,CV_32F,Scalar::all(0));
 
     vconcat(verLine,Line,tempLine);
     vconcat(tempLine,horLine,tempLine);
 
     namedWindow("test");
     resize(tempLine,tempLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
-    std::cout<<tempLine.size().width<<std::endl;
 
 //    std::cout<<tmp.row(0)<<std::endl;
 //    std::cout<<tmp.row(1)<<std::endl;

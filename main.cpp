@@ -58,7 +58,7 @@ void showImage()
     Mat image = lineBlank.clone();
 
     for (int i = 0; i < RULE_NUMBER; ++i) {
-        pattern = dbp.builder(LINE_HEIGHT,LINE_WIDTH,new cv::Point(x,y));
+        pattern = dbp.builder(LINE_HEIGHT,LINE_WIDTH,new cv::Point(i,0));
         vconcat(image,lineBlack,image);
         vconcat(image,pattern,image);
         vconcat(image,lineBlack,image);
