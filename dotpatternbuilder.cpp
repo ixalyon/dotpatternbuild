@@ -5,6 +5,18 @@
 
 using namespace cv;
 
+int  Width_Unit=5;
+int  Height_Unit=5;
+int  Height_Unit_Line=3;
+int  Number_Base=6;
+int  Digits=3;
+int  Dim_X = 3;
+int  Dim_Y = 3;
+int  Blnk_Ln_Dim_X = 1;
+int  Blnk_Ln_Dim_Y = 2;
+int  Scale_X = 10;
+int  Scale_Y = 10;
+bool Center_Pixel =false;
 
 
 

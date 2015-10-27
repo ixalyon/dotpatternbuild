@@ -3,19 +3,23 @@
 
 #include <opencv2/opencv.hpp>
 
-typedef const int extern ConstInt;
-ConstInt Width_Unit=5;
-ConstInt Height_Unit=5;
-ConstInt Height_Unit_Line=3;
-ConstInt Number_Base=6;
-ConstInt Digits=3;
-ConstInt Dim_X = 3;
-ConstInt Dim_Y = 3;
-ConstInt Blnk_Ln_Dim_X = 1;
-ConstInt Blnk_Ln_Dim_Y = 2;
-ConstInt Scale_X = 10;
-ConstInt Scale_Y = 10;
-const bool Center_Pixel =false;
+int extern Width_Unit;
+int extern Height_Unit;
+int extern Height_Unit_Line;
+int extern Number_Base;
+int extern Digits;
+int extern Dim_X;
+int extern Dim_Y;
+int extern Blnk_Ln_Dim_X;
+int extern Blnk_Ln_Dim_Y;
+int extern Scale_X;
+int extern Scale_Y;
+bool extern Center_Pixel;
+
+int extern LINE_WIDTH;
+int extern LINE_HEIGHT;
+int extern RULE_NUMBER;
+int extern BLANK_HEIGHT;
 
 class DotPatternBuilder
 {

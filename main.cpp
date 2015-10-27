@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -11,11 +12,10 @@
 using namespace std;
 using namespace cv;
 
-typedef const int ConstInt;
-ConstInt LINE_WIDTH(500);
-ConstInt LINE_HEIGHT( 2);
-ConstInt RULE_NUMBER (10);
-ConstInt BLANK_HEIGHT (20);
+int  LINE_WIDTH(500);
+int  LINE_HEIGHT( 2);
+int  RULE_NUMBER (10);
+int  BLANK_HEIGHT (20);
 
 void showImage();
 
@@ -67,8 +67,10 @@ void showImage()
         vconcat(image,lineBlank,image);
     }
     imshow( "Display window", image );
-//    string s="pattern"<<Scale_X<<"X"<<Scale_Y<<".png";
-//    imwrite(s,image*255);
+    stringstream ss;
+    ss<<"pattern"<<Scale_X<<"X"<<Scale_Y<<".png";
+    string s=ss.str();
+    imwrite(s,image*255);
 
 //   return image;
 }
