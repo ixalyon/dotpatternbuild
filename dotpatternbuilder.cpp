@@ -56,9 +56,12 @@ DotPatternBuilder::DotPatternBuilder()
              tmps.copyTo(roi);
              continue;
          }
+
          Mat roi(patternTemplate,Rect(width*i,0,width,height));
         std::cout<<lineWidth-width*i<<" "<<height<<std::endl;
          tmp.copyTo(roi);
+         Mat roi1=roi.colRange(roi.size().width-3,roi.size().width);
+         roi1=1;
 
      }
 

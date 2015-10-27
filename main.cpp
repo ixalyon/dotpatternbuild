@@ -61,6 +61,8 @@ void showImage()
 
     for (int i = 0; i < RULE_NUMBER; ++i) {
         pattern = dbp.builder(LINE_HEIGHT,LINE_WIDTH,new cv::Point(i,0));
+        Mat roi=pattern.rowRange(pattern.size().height/2-1,pattern.size().height/2+1);
+        roi=1;
         vconcat(image,lineBlack,image);
         vconcat(image,pattern,image);
         vconcat(image,lineBlack,image);
