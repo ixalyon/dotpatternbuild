@@ -13,9 +13,10 @@ int  Digits=3;
 int  Dim_X = 3;
 int  Dim_Y = 3;
 int  Blnk_Ln_Dim_X = 1;
-int  Blnk_Ln_Dim_Y = 2;
-int  Scale_X = 10;
-int  Scale_Y = 10;
+int  Blnk_Ln_Dim_Y = 3;
+int  Scale_X = 2;
+int  Scale_Y = 1;
+int  Scale_BL_Y = 5;
 bool Center_Pixel =false;
 
 
@@ -31,8 +32,8 @@ DotPatternBuilder::DotPatternBuilder()
  Mat DotPatternBuilder::builder(const int lineHeight,const int lineWidth, Point* pos)
  {
      Mat tmp;
-     int width=(Digits*(Dim_X+Blnk_Ln_Dim_X)+Blnk_Ln_Dim_X)*Scale_X;
-     int height=(Dim_Y*2+Blnk_Ln_Dim_Y)*Scale_Y;
+     int width=(Digits*(Dim_X/*+Blnk_Ln_Dim_X*/)+Blnk_Ln_Dim_X*4)*Scale_X;
+     int height=(Dim_Y*2)*Scale_Y+Blnk_Ln_Dim_Y;
     //Add random noise and keep value constant throughout the runtime
 
      Mat patternTemplate(height,lineWidth,CV_32F,1);
@@ -54,14 +55,18 @@ DotPatternBuilder::DotPatternBuilder()
              Mat roi(patternTemplate,Rect(width*i,0,lineWidth-width*i,height));
              Mat tmps(tmp,Rect(0,0,lineWidth-width*i,height));
              tmps.copyTo(roi);
+             tmps=roi.colRange(1,2);
+             tmps=1;
              continue;
          }
 
          Mat roi(patternTemplate,Rect(width*i,0,width,height));
         std::cout<<lineWidth-width*i<<" "<<height<<std::endl;
          tmp.copyTo(roi);
-         Mat roi1=roi.colRange(roi.size().width-3,roi.size().width);
-         roi1=1;
+         tmp=roi.colRange(roi.size().width-2,roi.size().width-1);
+         tmp=1;
+         tmp=roi.colRange(1,2);
+         tmp=1;
 
      }
 
@@ -72,6 +77,7 @@ Mat DotPatternBuilder::Pattern(cv::Point* pos)
 {
     int verticalPos=pos->x;
     int horizontalPos=pos->y;
+//    Blnk_Ln_Dim_X*=Scale_BL_Y;
 
 
     Mat tempLine, horLine,verLine;
@@ -80,30 +86,37 @@ Mat DotPatternBuilder::Pattern(cv::Point* pos)
 
 
     verLine=breakLine.clone();
+    hconcat(verLine,breakLine,verLine);
     for (int i = Digits-1; i > -1; --i) {
         tempLine=numberToPattern(verticalPos/std::pow(Number_Base,i),true);
         hconcat(verLine,tempLine ,verLine);
-        hconcat(verLine,breakLine,verLine);
+//        hconcat(verLine,breakLine,verLine);
         verticalPos%=(int)std::pow(Number_Base,i);
     }
+    hconcat(verLine,breakLine,verLine);
+    hconcat(verLine,breakLine,verLine);
 
     horLine=breakLine.clone();
+    hconcat(horLine,breakLine,horLine);
     for (int i = Digits-1; i > -1; --i) {
         tempLine=numberToPattern(horizontalPos/std::pow(Number_Base,i),true);
         hconcat(horLine,tempLine ,horLine);
-        hconcat(horLine,breakLine,horLine);
+//        hconcat(horLine,breakLine,horLine);
         horizontalPos%=(int)std::pow(Number_Base,i);
     }
+    hconcat(horLine,breakLine,horLine);
+    hconcat(horLine,breakLine,horLine);
 
-    Mat Line(Blnk_Ln_Dim_Y,verLine.size().width,CV_32F,Scalar::all(0));
-//    resize(Line,Line,Size(),Scale_X,Blnk_Ln_Dim_Y,INTER_NEAREST);
-//    resize(verLine,verLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
-//    resize(horLine,horLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
+    Mat Line(Blnk_Ln_Dim_Y,verLine.size().width*Scale_X,CV_32F,Scalar::all(0));
+    resize(verLine,verLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
+    resize(horLine,horLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
+
+    std::cout<<" Line width "<<Line.size().width<<"  "<<verLine.size().width<<std::endl;
 
 
     vconcat(verLine,Line,tempLine);
     vconcat(tempLine,horLine,tempLine);
-    resize(tempLine,tempLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
+//    resize(tempLine,tempLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
     namedWindow("test");
 
 

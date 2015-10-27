@@ -14,7 +14,9 @@ int extern Blnk_Ln_Dim_X;
 int extern Blnk_Ln_Dim_Y;
 int extern Scale_X;
 int extern Scale_Y;
+int extern Scale_BL_Y;
 bool extern Center_Pixel;
+
 
 int extern LINE_WIDTH;
 int extern LINE_HEIGHT;

@@ -12,33 +12,35 @@
 using namespace std;
 using namespace cv;
 
-int  LINE_WIDTH(500);
+int  LINE_WIDTH(510);
 int  LINE_HEIGHT( 2);
-int  RULE_NUMBER (10);
-int  BLANK_HEIGHT (20);
+int  RULE_NUMBER (20);
+int  BLANK_HEIGHT (40);
 
 void showImage();
 
 
 
-int x = 0;
-int y = 0;
+int x = 1;
+int y = 1;
 void on_trackbar( int, void* )
 {
- showImage();
+//    Scale_X=x;
+//    Scale_Y=y;
+    showImage();
 }
 
 int main( )
 {
-//    namedWindow( "Display window", CV_WINDOW_AUTOSIZE );
+    namedWindow( "Display", CV_WINDOW_AUTOSIZE );
 
     showImage();
 
 
 
-    createTrackbar("X", "test", &x, 300,on_trackbar);
+    createTrackbar("X", "Display", &x, 10,on_trackbar);
 
-    createTrackbar("Y", "test", &y, 215,on_trackbar);
+    createTrackbar("Y", "Display", &y, 10,on_trackbar);
     on_trackbar( x, 0 );
     on_trackbar( y, 0 );
     DotPatternBuilder dbp;
@@ -53,22 +55,28 @@ void showImage()
 
     DotPatternBuilder dbp;
     Mat pattern;
-    Mat lineBlank(BLANK_HEIGHT ,LINE_WIDTH,CV_32F,Scalar(1));
-    Mat lineBlack(LINE_HEIGHT,LINE_WIDTH,CV_32F,Scalar(0));
-    Mat lineWhite(LINE_HEIGHT,LINE_WIDTH,CV_32F,Scalar(0.5));
+    Mat lineBlank(BLANK_HEIGHT*Scale_Y,LINE_WIDTH,CV_32F,Scalar(1));
+    Mat lineBlack(LINE_HEIGHT*(Scale_Y!=1?Scale_Y-1:Scale_Y),LINE_WIDTH,CV_32F,Scalar(0));
+    Mat lineWhite(1,LINE_WIDTH,CV_32F,Scalar(1));
+    Mat lineTinyBlack(1,LINE_WIDTH,CV_32F,Scalar(0));
 
-    Mat image = lineBlank.clone();
+    Mat image = lineBlack.clone();
+    vconcat(image,lineWhite,image);
 
     for (int i = 0; i < RULE_NUMBER; ++i) {
         pattern = dbp.builder(LINE_HEIGHT,LINE_WIDTH,new cv::Point(i,0));
-        Mat roi=pattern.rowRange(pattern.size().height/2-1,pattern.size().height/2+1);
+        Mat roi=pattern.rowRange(pattern.size().height/2,pattern.size().height/2+1);
         roi=1;
-        vconcat(image,lineBlack,image);
+        vconcat(image,lineTinyBlack,image);
         vconcat(image,pattern,image);
+        vconcat(image,lineTinyBlack,image);
+        vconcat(image,lineWhite,image);
         vconcat(image,lineBlack,image);
         vconcat(image,lineBlank,image);
+        vconcat(image,lineBlack,image);
+        vconcat(image,lineWhite,image);
     }
-    imshow( "Display window", image );
+    imshow( "Display", image );
     stringstream ss;
     ss<<"pattern"<<Scale_X<<"X"<<Scale_Y<<".png";
     string s=ss.str();
