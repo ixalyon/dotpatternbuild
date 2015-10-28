@@ -30,18 +30,19 @@ void on_trackbar( int, void* )
 //    Scale_Y=y;
     DotPatternBuilder dbp;
     Mat pattern = dbp.Pattern(new Point(x,0));
-    imshow("Display",pattern);
 
-//    showImage();
+    imshow("test",pattern);
+
+    showImage();
 }
 
 int main( )
 {
-    namedWindow( "Display", CV_WINDOW_AUTOSIZE );
+    namedWindow( "test", CV_WINDOW_AUTOSIZE );
 
 //    showImage();
 
-
+    namedWindow("Display");
 
     createTrackbar("X", "Display", &x, 16,on_trackbar);
 

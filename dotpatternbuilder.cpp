@@ -14,8 +14,8 @@ int  Dim_X = 3;
 int  Dim_Y = 3;
 int  Blnk_Ln_Dim_X = 1;
 int  Blnk_Ln_Dim_Y = 3;
-int  Scale_X = 10;
-int  Scale_Y = 10;
+int  Scale_X = 5;
+int  Scale_Y = 5;
 int  Scale_BL_Y = 5;
 bool Center_Pixel =false;
 
@@ -111,13 +111,13 @@ Mat DotPatternBuilder::Pattern(cv::Point* pos)
     resize(verLine,verLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
     resize(horLine,horLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
 
-//    std::cout<<" Line width "<<Line.size().width<<"  "<<verLine.size().width<<std::endl;
+    std::cout<<" Line width "<<Line.size().width<<"  "<<verLine.size().width<<std::endl;
 
 
     vconcat(verLine,Line,tempLine);
     vconcat(tempLine,horLine,tempLine);
 //    resize(tempLine,tempLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
-//    namedWindow("test");
+    namedWindow("test");
 
 
 //    std::cout<<tmp.row(0)<<std::endl;
