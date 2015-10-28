@@ -23,28 +23,33 @@ void showImage();
 
 int x = 1;
 int y = 1;
+
 void on_trackbar( int, void* )
 {
 //    Scale_X=x;
 //    Scale_Y=y;
-    showImage();
+    DotPatternBuilder dbp;
+    Mat pattern = dbp.Pattern(new Point(x,0));
+    imshow("Display",pattern);
+
+//    showImage();
 }
 
 int main( )
 {
     namedWindow( "Display", CV_WINDOW_AUTOSIZE );
 
-    showImage();
+//    showImage();
 
 
 
-    createTrackbar("X", "Display", &x, 10,on_trackbar);
+    createTrackbar("X", "Display", &x, 16,on_trackbar);
 
-    createTrackbar("Y", "Display", &y, 10,on_trackbar);
-    on_trackbar( x, 0 );
-    on_trackbar( y, 0 );
-    DotPatternBuilder dbp;
-    Mat pattern = dbp.builder(LINE_HEIGHT,LINE_WIDTH,new cv::Point(x,y));
+//    createTrackbar("Y", "Display", &y, 10,on_trackbar);
+    on_trackbar( x, 0);
+//    on_trackbar( y, 0 );
+
+
 
     waitKey(0);              // Wait for a keystroke in the window
     return 0;
@@ -78,7 +83,7 @@ void showImage()
     }
     imshow( "Display", image );
     stringstream ss;
-    ss<<"pattern"<<Scale_X<<"X"<<Scale_Y<<".png";
+    ss<<"pattern"<<Scale_X<<"X"<<Scale_Y<<".pbm";
     string s=ss.str();
     imwrite(s,image*255);
 
