@@ -12,7 +12,7 @@
 using namespace std;
 using namespace cv;
 
-int  LINE_WIDTH(510);
+int  LINE_WIDTH(1000);
 int  LINE_HEIGHT( 2);
 int  RULE_NUMBER (20);
 int  BLANK_HEIGHT (40);
@@ -44,7 +44,7 @@ int main( )
 
     namedWindow("Display");
 
-    createTrackbar("X", "Display", &x, 16,on_trackbar);
+    createTrackbar("X", "Display", &x, 500,on_trackbar);
 
 //    createTrackbar("Y", "Display", &y, 10,on_trackbar);
     on_trackbar( x, 0);
@@ -71,8 +71,8 @@ void showImage()
 
     for (int i = 0; i < RULE_NUMBER; ++i) {
         pattern = dbp.builder(LINE_HEIGHT,LINE_WIDTH,new cv::Point(i,0));
-        Mat roi=pattern.rowRange(pattern.size().height/2,pattern.size().height/2+1);
-        roi=1;
+//        Mat roi=pattern.rowRange(pattern.size().height/2,pattern.size().height/2+1);
+//        roi=1;
         vconcat(image,lineTinyBlack,image);
         vconcat(image,pattern,image);
         vconcat(image,lineTinyBlack,image);
