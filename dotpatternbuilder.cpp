@@ -2,22 +2,29 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <opencv2/highgui/highgui.hpp>
+#include <string>
+#include <sstream>
 
 using namespace cv;
 
 int  Width_Unit=5;
 int  Height_Unit=5;
 int  Height_Unit_Line=3;
-int  Number_Base=16;
+int  Number_Base=18;
 int  Digits=3;
 int  Dim_X = 3;
 int  Dim_Y = 3;
 int  Blnk_Ln_Dim_X = 1;
 int  Blnk_Ln_Dim_Y = 3;
-int  Scale_X = 4;
-int  Scale_Y = 4;
+int  Scale_X = 5;
+int  Scale_Y = 5;
 int  Scale_BL_Y = 5;
 bool Center_Pixel =false;
+int  width=(Digits*(Dim_X+Blnk_Ln_Dim_X)+Blnk_Ln_Dim_X*4)*Scale_X;
+int  height=(Dim_Y)*Scale_Y/*+Blnk_Ln_Dim_Y*/;
+int  LINE_WIDTH=(1000/width)*width;
+//int  LINE_WIDTH=((((Dim_Y+LINE_HEIGHT*2+BLANK_HEIGHT)*Scale_Y+4)*RULE_NUMBER/10*7)/width)*width;
+
 
 
 
@@ -26,14 +33,51 @@ Mat pattern;
 
 DotPatternBuilder::DotPatternBuilder()
 {
+    std::cout<<"width :  "<<width<<std::endl;
 
 }
 
- Mat DotPatternBuilder::builder(const int lineHeight,const int lineWidth, Point* pos)
+void DotPatternBuilder::showImage()
+{
+
+
+    Mat pattern,roi;
+    Mat lineBlank(BLANK_HEIGHT*Scale_Y,LINE_WIDTH,CV_32F,Scalar(1));
+    Mat lineBlack(LINE_HEIGHT*/*(Scale_Y!=1?Scale_Y-1:*/Scale_Y/*)*/,LINE_WIDTH,CV_32F,Scalar(0));
+    Mat lineTinyWhite(1,LINE_WIDTH,CV_32F,Scalar(1));
+    Mat lineTinyBlack(1,LINE_WIDTH,CV_32F,Scalar(0));
+
+    Mat image = lineBlack.clone();
+//    roi = image.rowRange(image.size().height-)
+    roiLines(image.rowRange(image.size().height-5,image.size().height-3));
+//    vconcat(image,lineTinyWhite,image);
+
+    for (int i = 0; i < RULE_NUMBER; ++i) {
+        pattern = builder(LINE_WIDTH,i*LINE_WIDTH/width);
+//        Mat roi=pattern.rowRange(pattern.size().height/2,pattern.size().height/2+1);
+//        roi=1;
+//        vconcat(image,lineTinyBlack,image);
+        vconcat(image,pattern,image);
+//        vconcat(image,lineTinyBlack,image);
+//        vconcat(image,lineTinyWhite,image);
+        vconcat(image,lineBlack,image);
+        roiLines(image.rowRange(image.size().height-5,image.size().height-3));
+        vconcat(image,lineBlank,image);
+        vconcat(image,lineBlack,image);
+        roiLines(image.rowRange(image.size().height-5,image.size().height-3));
+//        vconcat(image,lineTinyWhite,image);
+    }
+    imshow( "Display", image );
+    imwrite("pattern.bmp",image*255);
+
+//   return image;
+}
+
+ Mat DotPatternBuilder::builder(const int lineWidth, int pos)
  {
+     std::cout<<pos<<std::endl;
      Mat tmp;
-     int width=(Digits*(Dim_X+Blnk_Ln_Dim_X)+Blnk_Ln_Dim_X*4)*Scale_X;
-     int height=(Dim_Y)*Scale_Y/*+Blnk_Ln_Dim_Y*/;
+
     //Add random noise and keep value constant throughout the runtime
 
      Mat patternTemplate(height,lineWidth,CV_32F,1);
@@ -47,53 +91,47 @@ DotPatternBuilder::DotPatternBuilder()
      patternTemplate=pattern.clone();
 
 
-     for (int i = 0; i <= lineWidth/width; ++i) {
-         pos->y=i;
-         tmp= Pattern(pos);
+     for (int i = 0; i < lineWidth/width; ++i) {
+//         pos=i;
+         tmp= Pattern(pos+i);
          if(i==lineWidth/width){
 
              Mat roi(patternTemplate,Rect(width*i,0,lineWidth-width*i,height));
              Mat tmps(tmp,Rect(0,0,lineWidth-width*i,height));
              tmps.copyTo(roi);
-             tmps=roi.colRange(1,2);
-             tmps=1;
+             roiLines(roi.colRange(1,2));
              continue;
          }
 
          Mat roi(patternTemplate,Rect(width*i,0,width,height));
 //        std::cout<<lineWidth-width*i<<" "<<height<<std::endl;
          tmp.copyTo(roi);
-         tmp=roi.colRange(roi.size().width-3,roi.size().width-2);
-         tmp=1;
-         tmp=roi.colRange(roi.size().width-1,roi.size().width);
-         tmp=1;
-         tmp=roi.colRange(2,3);
-         tmp=1;
-         tmp=roi.colRange(0,1);
-         tmp=1;
+         roiLines(roi.colRange(roi.size().width-3,roi.size().width-2));
+         roiLines(roi.colRange(roi.size().width-1,roi.size().width));
+         roiLines(roi.colRange(2,3));
+         roiLines(roi.colRange(0,1));
 
      }
 
      return patternTemplate;
 }
 
-Mat DotPatternBuilder::Pattern(cv::Point* pos)
+void DotPatternBuilder::roiLines(Mat tmp){
+    tmp=1;
+}
+
+Mat DotPatternBuilder::Pattern(int pos)
 {
-    int verticalPos=pos->x;
-//    int verticalPos=pos->y;
-    int horizontalPos=pos->y;
-//    Blnk_Ln_Dim_X*=Scale_BL_Y;
+    int verticalPos=pos;
 
-
-    Mat tempLine, horLine,verLine;
+    Mat tempLine, verLine;
 
     Mat breakLine(Dim_Y,Blnk_Ln_Dim_X,CV_32F,Scalar::all(0));
-
 
     verLine=breakLine.clone();
     hconcat(verLine,breakLine,verLine);
     for (int i = Digits-1; i > -1; --i) {
-        tempLine=numberToPattern(verticalPos/std::pow(Number_Base,i),true);
+        tempLine=numberToPattern(verticalPos/std::pow(Number_Base,i));
         hconcat(verLine,tempLine ,verLine);
         hconcat(verLine,breakLine,verLine);
         verticalPos%=(int)std::pow(Number_Base,i);
@@ -101,44 +139,16 @@ Mat DotPatternBuilder::Pattern(cv::Point* pos)
     hconcat(verLine,breakLine,verLine);
     hconcat(verLine,breakLine,verLine);
 
-    horLine=breakLine.clone();
-    hconcat(horLine,breakLine,horLine);
-    for (int i = Digits-1; i > -1; --i) {
-        tempLine=numberToPattern(horizontalPos/std::pow(Number_Base,i),false);
-        hconcat(horLine,tempLine ,horLine);
-//        hconcat(horLine,breakLine,horLine);
-        horizontalPos%=(int)std::pow(Number_Base,i);
-    }
-    hconcat(horLine,breakLine,horLine);
-    hconcat(horLine,breakLine,horLine);
+
 
     Mat Line(Blnk_Ln_Dim_Y,verLine.size().width*Scale_X,CV_32F,Scalar::all(0));
     resize(verLine,verLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
-    resize(horLine,horLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
 
-//    std::cout<<" Line width "<<Line.size().width<<"  "<<verLine.size().width<<std::endl;
-
-
-//    vconcat(verLine,Line,tempLine);
-//    vconcat(tempLine,horLine,tempLine);
-//    resize(tempLine,tempLine,Size(),Scale_X,Scale_Y,INTER_NEAREST);
-//    namedWindow("test");
-
-
-//    std::cout<<tmp.row(0)<<std::endl;
-//    std::cout<<tmp.row(1)<<std::endl;
-//    std::cout<<tmp.row(2)<<std::endl;
-
-
-
-//    imshow("test",tempLine);
-//    multiply(tmp,255,tmp);
-//    imwrite("img.jpg",tmp);
     return verLine;
 
 }
 
-Mat DotPatternBuilder::numberToPattern(int value,bool isVerticalLine)
+Mat DotPatternBuilder::numberToPattern(int value)
 {
     Mat_<float_t> Line = Mat::eye(Dim_Y, Dim_X, CV_32F);
     if(value>7)
@@ -146,6 +156,9 @@ Mat DotPatternBuilder::numberToPattern(int value,bool isVerticalLine)
         flip(Line,Line,0);
         value%=8;
     }
+    if(value==0)
+        return Line;
+    value--;
 
     if(Center_Pixel)
         Line(1,1)=0;
@@ -158,7 +171,6 @@ Mat DotPatternBuilder::numberToPattern(int value,bool isVerticalLine)
         value+=6;
         Line(val[value%8],val[value%8+1])=1;
     }
-//    std::cout<<"value :"<<value<<std::endl;
 
     return Line;
 }

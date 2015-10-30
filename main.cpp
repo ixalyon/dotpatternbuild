@@ -2,8 +2,6 @@
 #include <QApplication>
 
 #include <iostream>
-#include <string>
-#include <sstream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -12,10 +10,10 @@
 using namespace std;
 using namespace cv;
 
-int  LINE_WIDTH(1000);
+
 int  LINE_HEIGHT( 2);
 int  RULE_NUMBER (20);
-int  BLANK_HEIGHT (40);
+int  BLANK_HEIGHT (30);
 
 void showImage();
 
@@ -29,11 +27,11 @@ void on_trackbar( int, void* )
 //    Scale_X=x;
 //    Scale_Y=y;
     DotPatternBuilder dbp;
-    Mat pattern = dbp.Pattern(new Point(x,0));
+//    Mat pattern = dbp.Pattern(x);
 
-    imshow("test",pattern);
+//    imshow("test",pattern);
 
-    showImage();
+    dbp.showImage();
 }
 
 int main( )
@@ -56,37 +54,4 @@ int main( )
     return 0;
 }
 
-void showImage()
-{
 
-    DotPatternBuilder dbp;
-    Mat pattern;
-    Mat lineBlank(BLANK_HEIGHT*Scale_Y,LINE_WIDTH,CV_32F,Scalar(1));
-    Mat lineBlack(LINE_HEIGHT*(Scale_Y!=1?Scale_Y-1:Scale_Y),LINE_WIDTH,CV_32F,Scalar(0));
-    Mat lineWhite(1,LINE_WIDTH,CV_32F,Scalar(1));
-    Mat lineTinyBlack(1,LINE_WIDTH,CV_32F,Scalar(0));
-
-    Mat image = lineBlack.clone();
-    vconcat(image,lineWhite,image);
-
-    for (int i = 0; i < RULE_NUMBER; ++i) {
-        pattern = dbp.builder(LINE_HEIGHT,LINE_WIDTH,new cv::Point(i,0));
-//        Mat roi=pattern.rowRange(pattern.size().height/2,pattern.size().height/2+1);
-//        roi=1;
-        vconcat(image,lineTinyBlack,image);
-        vconcat(image,pattern,image);
-        vconcat(image,lineTinyBlack,image);
-        vconcat(image,lineWhite,image);
-        vconcat(image,lineBlack,image);
-        vconcat(image,lineBlank,image);
-        vconcat(image,lineBlack,image);
-        vconcat(image,lineWhite,image);
-    }
-    imshow( "Display", image );
-    stringstream ss;
-    ss<<"pattern"<<Scale_X<<"X"<<Scale_Y<<".pbm";
-    string s=ss.str();
-    imwrite(s,image*255);
-
-//   return image;
-}

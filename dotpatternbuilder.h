@@ -26,13 +26,14 @@ int extern BLANK_HEIGHT;
 class DotPatternBuilder
 {
 public:
-
-
     DotPatternBuilder();
-    cv::Mat builder(int,int,cv::Point*);
+    void showImage();
+private:
+    cv::Mat builder(int, int);
     cv::Mat patternMethod();
-    cv::Mat Pattern(cv::Point*);
-    cv::Mat numberToPattern(int,bool);
+    cv::Mat Pattern(int);
+    cv::Mat numberToPattern(int);
+    void roiLines(cv::Mat tmp);
     void matFill(cv::Mat_<float>*);
 };
 
