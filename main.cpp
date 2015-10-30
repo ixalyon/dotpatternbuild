@@ -12,8 +12,6 @@ using namespace cv;
 
 
 int  LINE_HEIGHT( 2);
-int  RULE_NUMBER (20);
-int  BLANK_HEIGHT (30);
 
 void showImage();
 
