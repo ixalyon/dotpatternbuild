@@ -40,7 +40,7 @@ DotPatternBuilder::DotPatternBuilder()
 void DotPatternBuilder::showImage()
 {
 
-
+    int roiHeight=0;
     Mat pattern,roi;
     Mat lineBlank(BLANK_HEIGHT*Scale_Y,LINE_WIDTH,CV_32F,Scalar(1));
     Mat lineBlack(LINE_HEIGHT*/*(Scale_Y!=1?Scale_Y-1:*/Scale_Y/*)*/,LINE_WIDTH,CV_32F,Scalar(0));
@@ -49,7 +49,8 @@ void DotPatternBuilder::showImage()
 
     Mat image = lineBlack.clone();
 //    roi = image.rowRange(image.size().height-)
-    roiLines(image.rowRange(image.size().height-5,image.size().height-3));
+    roiHeight=image.size().height;
+    roiLines(image.rowRange(roiHeight-5,roiHeight-3));
 //    vconcat(image,lineTinyWhite,image);
 
     for (int i = 0; i < RULE_NUMBER; ++i) {
@@ -60,8 +61,9 @@ void DotPatternBuilder::showImage()
         vconcat(image,pattern,image);
 //        vconcat(image,lineTinyBlack,image);
 //        vconcat(image,lineTinyWhite,image);
+        roiHeight=image.size().height;
         vconcat(image,lineBlack,image);
-        roiLines(image.rowRange(image.size().height-5,image.size().height-3));
+        roiLines(image.rowRange(roiHeight+3,roiHeight+5));
         vconcat(image,lineBlank,image);
         vconcat(image,lineBlack,image);
         roiLines(image.rowRange(image.size().height-5,image.size().height-3));
