@@ -60,6 +60,8 @@ void DotPatternBuilder::showImage()
         roiHeight=image.size().height;
         roiLines(image.rowRange(roiHeight-lowerB,roiHeight));
         vconcat(image,lineBlank,image);
+//        if(i==RULE_NUMBER-1)
+//            continue;
         roiHeight=image.size().height;
         vconcat(image,lineBlack,image);
         roiLines(image.rowRange(roiHeight,roiHeight+lowerB));
@@ -68,7 +70,7 @@ void DotPatternBuilder::showImage()
     {
 //        Mat roi(image,Rect(width*i,0,width,height));
 //        roiLines(roi.colRange(roi.size().width-3,roi.size().width));
-        roiLines(image.colRange(width-3,width));
+        roiLines(image.colRange(width*i,width*i+2));
     }
     imshow( "Display", image );
     imwrite("pattern.png",image*255);
@@ -112,7 +114,7 @@ void DotPatternBuilder::showImage()
 //        std::cout<<lineWidth-width*i<<" "<<height<<std::endl;
          tmp.copyTo(roi);
 //         roiLines(roi.colRange(roi.size().width-3,roi.size().width-2));
-         roiLines(roi.colRange(roi.size().width-3,roi.size().width));
+//         roiLines(roi.colRange(roi.size().width-3,roi.size().width));
 //         roiLines(roi.colRange(2,3));
 //         roiLines(roi.colRange(0,1));
 
