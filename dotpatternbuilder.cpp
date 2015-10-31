@@ -11,7 +11,7 @@ int  Width_Unit=5;
 int  Height_Unit=5;
 int  Height_Unit_Line=3;
 int  Number_Base=18;
-int  Digits=2;
+int  Digits=3;
 int  Dim_X = 3;
 int  Dim_Y = 3;
 int  Blnk_Ln_Dim_X = 1;
@@ -19,7 +19,7 @@ int  Blnk_Ln_Dim_Y = 3;
 int  Scale_X = 3;
 int  Scale_Y = 3;
 int  Scale_BL_Y = 5;
-bool Center_Pixel =false;
+bool Center_Pixel =true;
 int  width=(Digits*(Dim_X+Blnk_Ln_Dim_X)+Blnk_Ln_Dim_X*4)*Scale_X;
 int  height=(Dim_Y)*Scale_Y/*+Blnk_Ln_Dim_Y*/;
 int  LINE_WIDTH=(1000/width)*width;
@@ -104,10 +104,10 @@ void DotPatternBuilder::showImage()
          Mat roi(patternTemplate,Rect(width*i,0,width,height));
 //        std::cout<<lineWidth-width*i<<" "<<height<<std::endl;
          tmp.copyTo(roi);
-         roiLines(roi.colRange(roi.size().width-3,roi.size().width-2));
-         roiLines(roi.colRange(roi.size().width-1,roi.size().width));
-         roiLines(roi.colRange(2,3));
-         roiLines(roi.colRange(0,1));
+//         roiLines(roi.colRange(roi.size().width-3,roi.size().width-2));
+         roiLines(roi.colRange(roi.size().width-3,roi.size().width));
+//         roiLines(roi.colRange(2,3));
+//         roiLines(roi.colRange(0,1));
 
      }
 
@@ -149,6 +149,8 @@ Mat DotPatternBuilder::Pattern(int pos)
 Mat DotPatternBuilder::numberToPattern(int value)
 {
     Mat_<float_t> Line = Mat::eye(Dim_Y, Dim_X, CV_32F);
+    if(!Center_Pixel)
+        Line(1,1)=0;
     if(value>7)
     {
         flip(Line,Line,0);
@@ -158,8 +160,6 @@ Mat DotPatternBuilder::numberToPattern(int value)
         return Line;
     value--;
 
-    if(Center_Pixel)
-        Line(1,1)=0;
     int val[]={0,1,  1,2,  2,1,  1,0};
 
     value*=2;
