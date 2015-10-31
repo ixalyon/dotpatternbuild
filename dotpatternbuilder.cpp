@@ -51,17 +51,24 @@ void DotPatternBuilder::showImage()
 
     Mat image = lineBlack.clone();
     roiHeight=image.size().height;
-    roiLines(image.rowRange(roiHeight-upperB,roiHeight-lowerB));
+    roiLines(image.rowRange(0,lowerB));
 
     for (int i = 0; i < RULE_NUMBER; ++i) {
         pattern = builder(LINE_WIDTH,i*LINE_WIDTH/width);
         vconcat(image,pattern,image);
+        vconcat(image,lineBlack,image);
+        roiHeight=image.size().height;
+        roiLines(image.rowRange(roiHeight-lowerB,roiHeight));
+        vconcat(image,lineBlank,image);
         roiHeight=image.size().height;
         vconcat(image,lineBlack,image);
-        roiLines(image.rowRange(roiHeight+lowerB,roiHeight+upperB));
-        vconcat(image,lineBlank,image);
-        vconcat(image,lineBlack,image);
-        roiLines(image.rowRange(image.size().height-upperB,image.size().height-lowerB));
+        roiLines(image.rowRange(roiHeight,roiHeight+lowerB));
+    }
+    for (int i = 0; i < LINE_WIDTH/width; ++i)
+    {
+//        Mat roi(image,Rect(width*i,0,width,height));
+//        roiLines(roi.colRange(roi.size().width-3,roi.size().width));
+        roiLines(image.colRange(width-3,width));
     }
     imshow( "Display", image );
     imwrite("pattern.png",image*255);
