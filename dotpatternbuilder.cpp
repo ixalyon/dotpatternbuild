@@ -16,15 +16,16 @@ int  Dim_X = 3;
 int  Dim_Y = 3;
 int  Blnk_Ln_Dim_X = 1;
 int  Blnk_Ln_Dim_Y = 3;
-int  Scale_X = 3;
-int  Scale_Y = 3;
+int  Scale_X = 2;
+int  Scale_Y = 2;
 int  Scale_BL_Y = 5;
 bool Center_Pixel =true;
 int  width=(Digits*(Dim_X+Blnk_Ln_Dim_X)+Blnk_Ln_Dim_X*4)*Scale_X;
 int  height=(Dim_Y)*Scale_Y/*+Blnk_Ln_Dim_Y*/;
+//int  RULE_NUMBER = 20;
 int  LINE_WIDTH=(1000/width)*width;
 //int  LINE_WIDTH=((Dim_Y+LINE_HEIGHT*2+BLANK_HEIGHT)*Scale_Y+4)*RULE_NUMBER/10*7;
-int  BLANK_HEIGHT=20;
+int  BLANK_HEIGHT=15;
 int  RULE_NUMBER = LINE_WIDTH/7*10/((Dim_Y+LINE_HEIGHT*2+BLANK_HEIGHT)*Scale_Y+4);
 
 
@@ -70,12 +71,13 @@ void DotPatternBuilder::showImage()
     {
 //        Mat roi(image,Rect(width*i,0,width,height));
 //        roiLines(roi.colRange(roi.size().width-3,roi.size().width));
-        roiLines(image.colRange(width*i,width*i+2));
+        roiLines(image.colRange(width*i,width*i+2),1);
+//        roiLines(image.colRange(width*i,width*i+2));
     }
     imshow( "Display", image );
     imwrite("pattern.png",image*255);
     imwrite("pattern.bmp",image*255);
-    imwrite("pattern.pbm",image*255);
+    imwrite("pattern.tiff",image*255);
 
 //   return image;
 }
@@ -123,9 +125,19 @@ void DotPatternBuilder::showImage()
      return patternTemplate;
 }
 
-void DotPatternBuilder::roiLines(Mat tmp){
-    tmp=1;
-}
+ void DotPatternBuilder::roiLines(Mat tmp){
+     tmp=1;
+ }
+ void DotPatternBuilder::roiLines(Mat tmp,int i=0){
+     tmp=1;
+
+     if(i==5){
+         Mat roi=tmp.col(0);
+         roi-=1;
+//         roi=tmp.col(tmp.cols);
+//         roi-=1;
+     }
+ }
 
 Mat DotPatternBuilder::Pattern(int pos)
 {

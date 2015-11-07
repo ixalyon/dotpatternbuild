@@ -34,6 +34,7 @@ private:
     cv::Mat Pattern(int);
     cv::Mat numberToPattern(int);
     void roiLines(cv::Mat tmp);
+    void roiLines(cv::Mat tmp, int i);
     void matFill(cv::Mat_<float>*);
 };
 
